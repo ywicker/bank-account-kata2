@@ -124,8 +124,17 @@ public class AccountServiceTest {
 	}
 
 
-	private boolean checkDatesRoughly(final List<?> dates, final Date now) {
-		for(Object operationDate : dates) {
+	/**
+	 * Permet de verifier qu'un ensemble de dates soient approximativement 
+	 * egales a la date actuelle (Jour - 1)
+	 * 
+	 * @param operationDates : dates des operations testees
+	 * @param now : Date de debut de l'execution des TUs
+	 * @return true si les date sont approximativement egales a la date 
+	 * actuelle (Jour - 1)
+	 */
+	private boolean checkDatesRoughly(final List<?> operationDates, final Date now) {
+		for(Object operationDate : operationDates) {
 			if(!(operationDate instanceof Date)
 					&& !compareDateRoughly((Date)operationDate, now)) {
 				return false;
@@ -133,6 +142,16 @@ public class AccountServiceTest {
 		}
 		return true;
 	}
+
+	/**
+	 * Permet de verifier qu'une de date soit approximativement 
+	 * egale a la date actuelle (Jour - 1)
+	 * 
+	 * @param operationDate : date de l'operations testee
+	 * @param now : Date de debut de l'execution des TUs
+	 * @return true si la date est approximativement egale a la date 
+	 * actuelle (Jour - 1)
+	 */
 	private boolean compareDateRoughly(final Date operationDate, final Date now) {
 		long timeStampNow = now.getTime();
 		long timeStampOpDate = ((Date)operationDate).getTime();
