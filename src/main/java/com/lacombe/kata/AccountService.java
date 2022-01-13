@@ -33,7 +33,7 @@ public class AccountService {
 	 * @param idAccount l'identifiant du compte
 	 * @return le compte bancaire
 	 */
-	private Account getAccount(final int idAccount) {
+	public Account getAccount(final int idAccount) {
 		if(accounts.containsKey(idAccount)) {
 			return accounts.get(idAccount);
 		} else {
