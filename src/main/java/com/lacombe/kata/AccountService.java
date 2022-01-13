@@ -33,6 +33,8 @@ public class AccountService {
 	 * @return
 	 */
 	public int deposit(final int idAccount, final int amount) {
+		assert amount > 0 : "Le depot doit etre d'un montant superieur a 0";
+
 		accounts.put(idAccount, amount + getBalance(idAccount));
 		return getBalance(idAccount);
 	}
