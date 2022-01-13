@@ -1,6 +1,6 @@
 package com.lacombe.kata.model;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Account {
@@ -21,7 +21,7 @@ public class Account {
 
 	public Account() {
 		this.balance = 0;
-		this.operations = Collections.emptyList();
+		this.operations = new ArrayList<Operation>();
 	}
 
 	public void setBalance(int balance) {

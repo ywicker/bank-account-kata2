@@ -105,7 +105,7 @@ public class AccountServiceTest {
 		assertThat(account2).extracting("operations").asList().hasSize(1)
 		.extracting("amount", "type").containsExactly(
 				tuple(2, OperationType.DEPOSIT));
-		assertThat(account2).extracting("operations").extracting("date").asList()
+		assertThat(account2).extracting("operations").asList().extracting("date")
 			.matches(dates -> checkDatesRoughly(dates, now));
 
 		// Test d'un retrait suite a un depot
@@ -119,7 +119,7 @@ public class AccountServiceTest {
 					tuple(10, OperationType.DEPOSIT),
 					tuple(4, OperationType.WITHDRAWAL),
 					tuple(6, OperationType.WITHDRAWAL));
-		assertThat(account3).extracting("operations").extracting("date").asList()
+		assertThat(account3).extracting("operations").asList().extracting("date")
 			.matches(dates -> checkDatesRoughly(dates, now));
 	}
 

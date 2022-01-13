@@ -3,6 +3,8 @@ package com.lacombe.kata;
 import java.util.HashMap;
 
 import com.lacombe.kata.model.Account;
+import com.lacombe.kata.model.Operation;
+import com.lacombe.kata.model.OperationType;
 
 public class AccountService {
 
@@ -52,6 +54,7 @@ public class AccountService {
 		assert amount > 0 : DEPOSIT_ERROR_MESSAGE;
 
 		final Account account = getAccount(idAccount);
+		account.addOperation(new Operation(amount, OperationType.DEPOSIT));
 		account.setBalance(amount + getBalance(idAccount));
 		accounts.put(idAccount, account);
 		return getBalance(idAccount);
@@ -68,6 +71,7 @@ public class AccountService {
 		assert amount > 0 : WITHDRAWAL_ERROR_MESSAGE;
 
 		final Account account = getAccount(idAccount);
+		account.addOperation(new Operation(amount, OperationType.WITHDRAWAL));
 		account.setBalance(getBalance(idAccount) - amount);
 		accounts.put(idAccount, account);
 		return getBalance(idAccount);
