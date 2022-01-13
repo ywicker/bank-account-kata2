@@ -98,7 +98,7 @@ public class AccountServiceTest {
 		assertThat(account1).extracting("balance").isEqualTo(0);
 		assertThat(account1).extracting("operations").asList().isEmpty();
 
-		// Test d'un second depot retrait avec solde negatif
+		// Recuperation d'un compte avec une seule operation
 		accountService.deposit(2, 2);
 		final Account account2 = accountService.getAccount(2);
 		assertThat(account2).extracting("balance").isEqualTo(2);
@@ -108,7 +108,7 @@ public class AccountServiceTest {
 		assertThat(account2).extracting("operations").asList().extracting("date")
 			.matches(dates -> checkDatesRoughly(dates, now));
 
-		// Test d'un retrait suite a un depot
+		// Recuperation d'un compte avec plusieurs operations
 		accountService.deposit(3, 10);
 		accountService.withdrawal(3, 4);
 		accountService.withdrawal(3, 6);
