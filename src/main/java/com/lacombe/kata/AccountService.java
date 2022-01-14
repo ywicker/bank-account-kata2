@@ -55,7 +55,6 @@ public class AccountService {
 		assert amount > 0 : DEPOSIT_ERROR_MESSAGE;
 
 		final Account account = getAccount(idAccount);
-		account.addOperation(new Operation(amount, OperationType.DEPOSIT));
 		accounts.put(idAccount, account);
 		return getBalance(idAccount);
 	}
@@ -71,7 +70,6 @@ public class AccountService {
 		assert amount > 0 : WITHDRAWAL_ERROR_MESSAGE;
 
 		final Account account = getAccount(idAccount);
-		account.addOperation(new Operation(amount, OperationType.WITHDRAWAL));
 		accounts.put(idAccount, account);
 		return getBalance(idAccount);
 	}
