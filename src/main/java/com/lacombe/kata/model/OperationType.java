@@ -13,4 +13,16 @@ public enum OperationType {
 	private OperationType(String label) {
 		this.label = label;
 	}
+
+	public int amountToApply(final int amount) {
+		switch (this) {
+		case DEPOSIT:
+			return amount;
+		case WITHDRAWAL:
+			return -amount;
+		default:
+			break;
+		}
+		return 0;
+	}
 }

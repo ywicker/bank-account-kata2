@@ -19,20 +19,9 @@ public class Account {
 
 
 	public int getBalance() {
-		int balance = 0;
-		for(Operation operation : operations) {
-			switch (operation.getType()) {
-			case DEPOSIT:
-				balance += operation.getAmount();
-				break;
-			case WITHDRAWAL:
-				balance -= operation.getAmount();
-				break;
-			default:
-				break;
-			}
-		}
-		return balance;
+		return operations.stream()
+				.map(operation -> operation.getType().amountToApply(operation.getAmount()))
+				.reduce(0, Integer::sum);
 	}
 
 	public void deposit(final int amount) {
