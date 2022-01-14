@@ -6,6 +6,7 @@ import org.junit.Test;
 import com.lacombe.kata.model.Account;
 import com.lacombe.kata.model.AccountStatement;
 import com.lacombe.kata.model.Operation;
+import com.lacombe.kata.model.Operations;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -123,12 +124,12 @@ public class AccountTest {
 
 		// Tests d'un compte avec plusieurs transactions
 		final Account account2 = new Account();
-		account2.setOperations(Arrays.asList(
+		account2.setOperations( new Operations(Arrays.asList(
 				new Operation(dateFormat.parse("2021-01-20 09:00:00"), 10, DEPOSIT),
 				new Operation(dateFormat.parse("2021-01-20 09:30:00"), 150, WITHDRAWAL),
 				new Operation(dateFormat.parse("2021-10-14 05:00:00"), 150, WITHDRAWAL),
 				new Operation(dateFormat.parse("2022-01-10 09:00:00"), 2000, DEPOSIT),
-				new Operation(dateFormat.parse("2022-01-14 09:00:00"), 20, WITHDRAWAL)));
+				new Operation(dateFormat.parse("2022-01-14 09:00:00"), 20, WITHDRAWAL))));
 
 		final AccountStatement account2Statement1 = account2.getAccountStatement(
 				dateFormat.parse("2021-01-15 00:00:00"), dateFormat.parse("2022-01-15 00:00:00"));

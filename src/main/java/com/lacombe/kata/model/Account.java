@@ -8,39 +8,38 @@ public class Account {
 	private String DEPOSIT_ERROR_MESSAGE = "Le depot doit etre d'un montant superieur a 0";
 	private String WITHDRAWAL_ERROR_MESSAGE = "Le retrait doit etre d'un montant superieur a 0";
 
-	private List<Operation> operations;
+	private Operations operations;
 
 	public List<Operation> getOperations() {
-		return operations;
+		return operations.getOperations();
 	}
 
 	public Account() {
-		this.operations = new ArrayList<Operation>();
+		this.operations = new Operations();
 	}
 
 	public int getBalance() {
-		return operations.stream()
-				.map(operation -> operation.getType().amountToApply(operation.getAmount()))
-				.reduce(0, Integer::sum);
+		return operations.getBalance();
 	}
 
 	public void deposit(final int amount) {
 		assert amount > 0 : DEPOSIT_ERROR_MESSAGE;
 
-		this.operations.add(new Operation(amount, OperationType.DEPOSIT));
+		this.operations.addOperation(new Operation(amount, OperationType.DEPOSIT));
 	}
 
 	public void withdrawal(final int amount) {
 		assert amount > 0 : WITHDRAWAL_ERROR_MESSAGE;
 
-		this.operations.add(new Operation(amount, OperationType.WITHDRAWAL));
+		this.operations.addOperation(new Operation(amount, OperationType.WITHDRAWAL));
 	}
 
 	public AccountStatement getAccountStatement(final Date startDate, final Date endDate) {
-		return null;
+		
+		return new AccountStatement(startDate, endDate, 0, 0, operations.getOperations());
 	}
 
-	public void setOperations(List<Operation> operations) {
+	public void setOperations(Operations operations) {
 		this.operations = operations;
 	}
 }
