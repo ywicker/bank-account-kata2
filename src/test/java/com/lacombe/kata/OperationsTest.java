@@ -7,7 +7,6 @@ import java.text.SimpleDateFormat;
 
 import org.junit.Test;
 
-import com.lacombe.kata.model.Account;
 import com.lacombe.kata.model.Operations;
 
 public class OperationsTest {
@@ -34,7 +33,6 @@ public class OperationsTest {
 		assertThatThrownBy(() -> {
 			operations.getOperations(
 					dateFormat.parse("2022-01-15 00:00:00"), null);
-		}).isInstanceOf(AssertionError.class)
-		  .hasMessageContaining("La date ne peut pas etre null");
+		}).isInstanceOf(NullPointerException.class);
 	}
 }
