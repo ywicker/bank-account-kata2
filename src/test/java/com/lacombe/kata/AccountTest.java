@@ -136,7 +136,7 @@ public class AccountTest {
 		assertThat(account2Statement1.getOldBalance()).isEqualTo(0);
 		assertThat(account2Statement1.getNewBalance())
 			.isEqualTo(account2.getBalance()).isEqualTo(1690);
-		assertThat(account1Statement1.getOperations()).hasSize(5);
+		assertThat(account2Statement1.getOperations()).hasSize(5);
 
 		final AccountStatement account2Statement2 = account2.getAccountStatement(
 				dateFormat.parse("2021-01-10 00:00:00"), dateFormat.parse("2021-01-12 00:00:00"));
@@ -145,10 +145,10 @@ public class AccountTest {
 		assertThat(account2Statement2.getOperations()).isEmpty();
 
 		final AccountStatement account2Statement3 = account2.getAccountStatement(
-				dateFormat.parse("2021-09-10 00:00:00"), dateFormat.parse("2022-01-12 00:00:00"));
+				dateFormat.parse("2021-09-10 00:00:00"), dateFormat.parse("2022-01-14 00:00:00"));
 		assertThat(account2Statement3.getOldBalance()).isEqualTo(-140);
 		assertThat(account2Statement3.getNewBalance()).isEqualTo(1710);
-		assertThat(account2Statement3.getOperations()).hasSize(3);
+		assertThat(account2Statement3.getOperations()).hasSize(2);
 	}
 
 	/**

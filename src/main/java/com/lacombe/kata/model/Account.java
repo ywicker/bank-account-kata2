@@ -1,6 +1,5 @@
 package com.lacombe.kata.model;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -35,8 +34,10 @@ public class Account {
 	}
 
 	public AccountStatement getAccountStatement(final Date startDate, final Date endDate) {
-		
-		return new AccountStatement(startDate, endDate, 0, 0, operations.getOperations());
+		final List<Operation> operationList = operations.getOperations(startDate, endDate);
+		final int oldBalance = operations.getBalance(new Date(0), startDate);
+		final int newBalance = operations.getBalance(new Date(0), endDate);
+		return new AccountStatement(startDate, endDate, oldBalance, newBalance, operationList);
 	}
 
 	public void setOperations(Operations operations) {
