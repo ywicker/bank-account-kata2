@@ -1,7 +1,6 @@
 package com.lacombe.kata;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import com.lacombe.kata.model.Account;
@@ -15,12 +14,10 @@ import java.util.Date;
 import java.util.List;
 
 public class AccountTest {
-	private AccountService accountService;
 	private Date now;
 
 	@Before
 	public void setup() {
-		accountService = new AccountService();
 		now = new Date();
 	}
 
@@ -77,35 +74,33 @@ public class AccountTest {
 	}
 
 	@Test
-	@Ignore
-	public void getAccount() {
+	public void getOperations() {
 		// Recuperation d'un compte vide
-		final Account account1 = accountService.getAccount(1);
-		assertThat(account1).extracting("balance").isEqualTo(0);
-		assertThat(account1).extracting("operations").asList().isEmpty();
+		final Account account1 = new Account();
+		assertThat(account1.getBalance()).isEqualTo(0);
+		assertThat(account1.getOperations()).isEmpty();
 
 		// Recuperation d'un compte avec une seule operation
-		accountService.deposit(2, 2);
-		final Account account2 = accountService.getAccount(2);
-		assertThat(account2).extracting("balance").isEqualTo(2);
-		assertThat(account2).extracting("operations").asList().hasSize(1)
-		.extracting("amount", "type").containsExactly(
-				tuple(2, OperationType.DEPOSIT));
-		assertThat(account2).extracting("operations").asList().extracting("date")
+		final Account account2 = new Account();
+		account2.deposit(2);
+		assertThat(account2.getBalance()).isEqualTo(2);
+		assertThat(account2.getOperations()).hasSize(1).extracting("amount", "type")
+			.containsExactly(tuple(2, OperationType.DEPOSIT));
+		assertThat(account2.getOperations()).extracting("date")
 			.matches(dates -> checkDatesRoughly(dates, now));
 
 		// Recuperation d'un compte avec plusieurs operations
-		accountService.deposit(3, 10);
-		accountService.withdrawal(3, 4);
-		accountService.withdrawal(3, 6);
-		final Account account3 = accountService.getAccount(3);
-		assertThat(account3).extracting("balance").isEqualTo(0);
-		assertThat(account3).extracting("operations").asList().hasSize(3)
-			.extracting("amount", "type").containsExactly(
-					tuple(10, OperationType.DEPOSIT),
-					tuple(4, OperationType.WITHDRAWAL),
-					tuple(6, OperationType.WITHDRAWAL));
-		assertThat(account3).extracting("operations").asList().extracting("date")
+		final Account account3 = new Account();
+		account3.deposit(10);
+		account3.withdrawal(4);
+		account3.withdrawal(6);
+		assertThat(account3.getBalance()).isEqualTo(0);
+		assertThat(account3.getOperations()).hasSize(3).extracting("amount", "type")
+			.containsExactly(
+				tuple(10, OperationType.DEPOSIT),
+				tuple(4, OperationType.WITHDRAWAL),
+				tuple(6, OperationType.WITHDRAWAL));
+		assertThat(account3.getOperations()).extracting("date")
 			.matches(dates -> checkDatesRoughly(dates, now));
 	}
 

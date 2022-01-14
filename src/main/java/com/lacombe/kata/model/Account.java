@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Account {
-
 	private String DEPOSIT_ERROR_MESSAGE = "Le depot doit etre d'un montant superieur a 0";
 	private String WITHDRAWAL_ERROR_MESSAGE = "Le retrait doit etre d'un montant superieur a 0";
 
@@ -47,4 +46,5 @@ public class Account {
 
 		this.operations.add(new Operation(amount, OperationType.WITHDRAWAL));
 	}
+	
 }
