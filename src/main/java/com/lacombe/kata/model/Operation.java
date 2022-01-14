@@ -11,20 +11,11 @@ public class Operation {
 	public Date getDate() {
 		return date;
 	}
-	public void setDate(Date date) {
-		this.date = date;
-	}
 	public int getAmount() {
 		return amount;
 	}
-	public void setAmount(int amount) {
-		this.amount = amount;
-	}
 	public OperationType getType() {
 		return type;
-	}
-	public void setType(OperationType type) {
-		this.type = type;
 	}
 	private Date date;
 	private int amount;
