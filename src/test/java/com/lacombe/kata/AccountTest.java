@@ -1,6 +1,7 @@
 package com.lacombe.kata;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.lacombe.kata.model.Account;
@@ -13,7 +14,7 @@ import static org.assertj.core.api.Assertions.tuple;
 import java.util.Date;
 import java.util.List;
 
-public class AccountServiceTest {
+public class AccountTest {
 	private AccountService accountService;
 	private Date now;
 
@@ -23,76 +24,61 @@ public class AccountServiceTest {
 		now = new Date();
 	}
 
-	/**
-	 * Test nominaux du depot d'argent
-	 */
 	@Test
-	public void depositTest() {
-		// Test d'un seul depot
-		assertThat(accountService.deposit(1, 2)).isEqualTo(2);
-		assertThat(accountService.deposit(2, 10)).isEqualTo(10);
-
-		// Test d'un second depot
-		assertThat(accountService.deposit(1, 3)).isEqualTo(5);
+	public void deposit() {
+		Account account = new Account();
+		account.deposit(2);
+		assertThat(account.getBalance()).isEqualTo(2);
+		account.deposit(3);
+		assertThat(account.getBalance()).isEqualTo(5);
 	}
 
-	/**
-	 * Test des cas limite du depot d'argent
-	 */
 	@Test
-	public void depositFailedTest() {
+	public void depositFailed() {
+		Account account = new Account();
+
 		// Test du depot d'un montant a 0
 		assertThatThrownBy(() -> {
-			accountService.deposit(1, 0);
+			account.deposit(0);
 		}).isInstanceOf(AssertionError.class)
 		  .hasMessageContaining("Le depot doit etre d'un montant superieur a 0");
 
 		// Test du depot d'un montant negatif
 		assertThatThrownBy(() -> {
-			accountService.deposit(1, -2);
+			account.deposit(-2);
 		}).isInstanceOf(AssertionError.class)
 		  .hasMessageContaining("Le depot doit etre d'un montant superieur a 0");
 	}
 
-	/**
-	 * Test nominaux du retrait d'argent
-	 */
 	@Test
-	public void withdrawalTest() {
-		// Test d'un seul retrait avec solde negatif
-		assertThat(accountService.withdrawal(1, 2)).isEqualTo(-2);
-
-		// Test d'un second depot retrait avec solde negatif
-		assertThat(accountService.withdrawal(1, 3)).isEqualTo(-5);
-
-		// Test d'un retrait suite a un depot
-		assertThat(accountService.deposit(2, 10)).isEqualTo(10);
-		assertThat(accountService.withdrawal(2, 5)).isEqualTo(5);
+	public void withdrawal() {
+		Account account = new Account();
+		account.withdrawal(2);
+		assertThat(account.getBalance()).isEqualTo(-2);
+		account.withdrawal(3);
+		assertThat(account.getBalance()).isEqualTo(-5);
 	}
 
-	/**
-	 * Test des cas limite du retrait d'argent
-	 */
 	@Test
-	public void withdrawalFailedTest() {
+	public void withdrawalFailed() {
+		Account account = new Account();
+
 		// Test du retrait d'un montant a 0
 		assertThatThrownBy(() -> {
-			accountService.withdrawal(1, 0);
+			account.withdrawal(0);
 		}).isInstanceOf(AssertionError.class)
 		  .hasMessageContaining("Le retrait doit etre d'un montant superieur a 0");
 
 		// Test du retrait d'un montant negatif
 		assertThatThrownBy(() -> {
-			accountService.withdrawal(1, -2);
+			account.withdrawal(-2);
 		}).isInstanceOf(AssertionError.class)
 		  .hasMessageContaining("Le retrait doit etre d'un montant superieur a 0");
 	}
 
-	/**
-	 * Test nominaux du retrait d'argent
-	 */
 	@Test
-	public void getAccountTest() {
+	@Ignore
+	public void getAccount() {
 		// Recuperation d'un compte vide
 		final Account account1 = accountService.getAccount(1);
 		assertThat(account1).extracting("balance").isEqualTo(0);

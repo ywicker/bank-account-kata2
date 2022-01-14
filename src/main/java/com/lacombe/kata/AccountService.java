@@ -6,6 +6,7 @@ import com.lacombe.kata.model.Account;
 import com.lacombe.kata.model.Operation;
 import com.lacombe.kata.model.OperationType;
 
+// TODO : a supprimer
 public class AccountService {
 
 	private String DEPOSIT_ERROR_MESSAGE = "Le depot doit etre d'un montant superieur a 0";
@@ -55,7 +56,6 @@ public class AccountService {
 
 		final Account account = getAccount(idAccount);
 		account.addOperation(new Operation(amount, OperationType.DEPOSIT));
-		account.setBalance(amount + getBalance(idAccount));
 		accounts.put(idAccount, account);
 		return getBalance(idAccount);
 	}
@@ -72,7 +72,6 @@ public class AccountService {
 
 		final Account account = getAccount(idAccount);
 		account.addOperation(new Operation(amount, OperationType.WITHDRAWAL));
-		account.setBalance(getBalance(idAccount) - amount);
 		accounts.put(idAccount, account);
 		return getBalance(idAccount);
 	}
