@@ -4,17 +4,24 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.lacombe.kata.model.Account;
-import com.lacombe.kata.model.OperationType;
+import com.lacombe.kata.model.AccountStatement;
+import com.lacombe.kata.model.Operation;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.Assertions.tuple;
+import static com.lacombe.kata.model.OperationType.DEPOSIT;
+import static com.lacombe.kata.model.OperationType.WITHDRAWAL;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 public class AccountTest {
 	private Date now;
+	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	@Before
 	public void setup() {
@@ -75,21 +82,21 @@ public class AccountTest {
 
 	@Test
 	public void getOperations() {
-		// Recuperation d'un compte vide
+		// Recuperation des operations d'un compte vide
 		final Account account1 = new Account();
 		assertThat(account1.getBalance()).isEqualTo(0);
 		assertThat(account1.getOperations()).isEmpty();
 
-		// Recuperation d'un compte avec une seule operation
+		// Recuperation des operations d'un compte avec une seule operation
 		final Account account2 = new Account();
 		account2.deposit(2);
 		assertThat(account2.getBalance()).isEqualTo(2);
 		assertThat(account2.getOperations()).hasSize(1).extracting("amount", "type")
-			.containsExactly(tuple(2, OperationType.DEPOSIT));
+			.containsExactly(tuple(2, DEPOSIT));
 		assertThat(account2.getOperations()).extracting("date")
 			.matches(dates -> checkDatesRoughly(dates, now));
 
-		// Recuperation d'un compte avec plusieurs operations
+		// Recuperation des operations d'un compte avec plusieurs operations
 		final Account account3 = new Account();
 		account3.deposit(10);
 		account3.withdrawal(4);
@@ -97,13 +104,51 @@ public class AccountTest {
 		assertThat(account3.getBalance()).isEqualTo(0);
 		assertThat(account3.getOperations()).hasSize(3).extracting("amount", "type")
 			.containsExactly(
-				tuple(10, OperationType.DEPOSIT),
-				tuple(4, OperationType.WITHDRAWAL),
-				tuple(6, OperationType.WITHDRAWAL));
+				tuple(10, DEPOSIT),
+				tuple(4, WITHDRAWAL),
+				tuple(6, WITHDRAWAL));
 		assertThat(account3.getOperations()).extracting("date")
 			.matches(dates -> checkDatesRoughly(dates, now));
 	}
 
+	@Test
+	public void getAccountStatement() throws ParseException {
+		// Test d'un compte vide
+		final Account account1 = new Account();
+		final AccountStatement account1Statement1 = account1.getAccountStatement(
+				dateFormat.parse("2022-01-14 00:00:00"), dateFormat.parse("2022-01-15 00:00:00"));
+		assertThat(account1Statement1.getOldBalance()).isEqualTo(0);
+		assertThat(account1Statement1.getNewBalance()).isEqualTo(0);
+		assertThat(account1Statement1.getOperations()).isEmpty();
+
+		// Tests d'un compte avec plusieurs transactions
+		final Account account2 = new Account();
+		account2.setOperations(Arrays.asList(
+				new Operation(dateFormat.parse("2021-01-20 09:00:00"), 10, DEPOSIT),
+				new Operation(dateFormat.parse("2021-01-20 09:30:00"), 150, WITHDRAWAL),
+				new Operation(dateFormat.parse("2021-10-14 05:00:00"), 150, WITHDRAWAL),
+				new Operation(dateFormat.parse("2022-01-10 09:00:00"), 2000, DEPOSIT),
+				new Operation(dateFormat.parse("2022-01-14 09:00:00"), 20, WITHDRAWAL)));
+
+		final AccountStatement account2Statement1 = account2.getAccountStatement(
+				dateFormat.parse("2021-01-15 00:00:00"), dateFormat.parse("2022-01-15 00:00:00"));
+		assertThat(account2Statement1.getOldBalance()).isEqualTo(0);
+		assertThat(account2Statement1.getNewBalance())
+			.isEqualTo(account2.getBalance()).isEqualTo(1690);
+		assertThat(account1Statement1.getOperations()).hasSize(5);
+
+		final AccountStatement account2Statement2 = account2.getAccountStatement(
+				dateFormat.parse("2021-01-10 00:00:00"), dateFormat.parse("2021-01-12 00:00:00"));
+		assertThat(account2Statement2.getOldBalance()).isEqualTo(0);
+		assertThat(account2Statement2.getNewBalance()).isEqualTo(0);
+		assertThat(account2Statement2.getOperations()).isEmpty();
+
+		final AccountStatement account2Statement3 = account2.getAccountStatement(
+				dateFormat.parse("2021-09-10 00:00:00"), dateFormat.parse("2022-01-12 00:00:00"));
+		assertThat(account2Statement3.getOldBalance()).isEqualTo(-140);
+		assertThat(account2Statement3.getNewBalance()).isEqualTo(1710);
+		assertThat(account2Statement3.getOperations()).hasSize(3);
+	}
 
 	/**
 	 * Permet de verifier qu'un ensemble de dates soient approximativement 

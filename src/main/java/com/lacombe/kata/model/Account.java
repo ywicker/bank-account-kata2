@@ -1,6 +1,7 @@
 package com.lacombe.kata.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Account {
@@ -16,7 +17,6 @@ public class Account {
 	public Account() {
 		this.operations = new ArrayList<Operation>();
 	}
-
 
 	public int getBalance() {
 		return operations.stream()
@@ -35,5 +35,12 @@ public class Account {
 
 		this.operations.add(new Operation(amount, OperationType.WITHDRAWAL));
 	}
-	
+
+	public AccountStatement getAccountStatement(final Date startDate, final Date endDate) {
+		return null;
+	}
+
+	public void setOperations(List<Operation> operations) {
+		this.operations = operations;
+	}
 }
