@@ -6,19 +6,15 @@ import org.junit.Test;
 import com.lacombe.kata.model.Account;
 import com.lacombe.kata.model.AccountStatement;
 import com.lacombe.kata.model.Operation;
-import com.lacombe.kata.model.Operations;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.tuple;
 import static com.lacombe.kata.model.OperationType.DEPOSIT;
 import static com.lacombe.kata.model.OperationType.WITHDRAWAL;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
 
 public class AccountTest {
 	private Date now;
@@ -92,10 +88,8 @@ public class AccountTest {
 		final Account account2 = new Account();
 		account2.deposit(now, 2);
 		assertThat(account2.getBalance()).isEqualTo(2);
-		assertThat(account2.getOperations()).hasSize(1).extracting("amount", "type")
-			.containsExactly(tuple(2, DEPOSIT));
-		assertThat(account2.getOperations()).extracting("date")
-			.matches(dates -> checkDatesRoughly(dates, now));
+		assertThat(account2.getOperations()).hasSize(1).containsExactly(
+				new Operation(now, 2, DEPOSIT));
 
 		// Recuperation des operations d'un compte avec plusieurs operations
 		final Account account3 = new Account();
@@ -103,13 +97,11 @@ public class AccountTest {
 		account3.withdrawal(now, 4);
 		account3.withdrawal(now, 6);
 		assertThat(account3.getBalance()).isEqualTo(0);
-		assertThat(account3.getOperations()).hasSize(3).extracting("amount", "type")
-			.containsExactly(
-				tuple(10, DEPOSIT),
-				tuple(4, WITHDRAWAL),
-				tuple(6, WITHDRAWAL));
-		assertThat(account3.getOperations()).extracting("date")
-			.matches(dates -> checkDatesRoughly(dates, now));
+		assertThat(account3.getOperations()).hasSize(3);
+		assertThat(account3.getOperations()).containsExactly(
+				new Operation(now, 10, DEPOSIT),
+				new Operation(now, 4, WITHDRAWAL),
+				new Operation(now, 6, WITHDRAWAL));
 	}
 
 	@Test
@@ -148,24 +140,5 @@ public class AccountTest {
 		assertThat(account2Statement3.getOldBalance()).isEqualTo(-140);
 		assertThat(account2Statement3.getNewBalance()).isEqualTo(1710);
 		assertThat(account2Statement3.getOperations()).hasSize(2);
-	}
-
-	/**
-	 * Permet de verifier qu'un ensemble de dates soient approximativement 
-	 * egales a la date actuelle (Jour - 1)
-	 * 
-	 * @param operationDates : dates des operations testees
-	 * @param now : Date de debut de l'execution des TUs
-	 * @return true si les date sont approximativement egales a la date 
-	 * actuelle (Jour - 1)
-	 */
-	private boolean checkDatesRoughly(final List<?> operationDates, final Date now) {
-		for(Object operationDate : operationDates) {
-			if((operationDate instanceof Date)
-					&& !operationDate.equals(now)) {
-				return false;
-			}
-		}
-		return true;
 	}
 }

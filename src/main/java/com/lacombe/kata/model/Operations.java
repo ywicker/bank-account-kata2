@@ -10,7 +10,7 @@ public class Operations {
 	private String DATE_1900_ERROR_MESSAGE = "Les dates anterieures a 1900 ne sont pas gerees";
 
 	public Operations() {
-		this.operations = new ArrayList<Operation>();
+		this.operations = new ArrayList<>();
 	}
 	public Operations(List<Operation> operations) {
 		this.operations = operations;
@@ -42,10 +42,6 @@ public class Operations {
 
 	public void addOperation(Operation operation) {
 		this.operations.add(operation);
-	}
-
-	public Date getFirstOperationDate(final Date startDate, final Date endDate) {
-		return operations.stream().map(Operation::getDate).min(Date::compareTo).get();
 	}
 
 	public int getBalance(List<Operation> operations) {
