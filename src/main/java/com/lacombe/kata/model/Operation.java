@@ -8,9 +8,6 @@ public class Operation {
 		this.amount = amount;
 		this.type = type;
 	}
-	public Operation(final int amount, final OperationType type) {
-		this(new Date(), amount, type);
-	}
 	public Date getDate() {
 		return date;
 	}

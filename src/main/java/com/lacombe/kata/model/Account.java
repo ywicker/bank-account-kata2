@@ -21,16 +21,16 @@ public class Account {
 		return operations.getBalance();
 	}
 
-	public void deposit(final int amount) {
+	public void deposit(final Date date, final int amount) {
 		assert amount > 0 : DEPOSIT_ERROR_MESSAGE;
 
-		this.operations.addOperation(new Operation(amount, OperationType.DEPOSIT));
+		this.operations.addOperation(new Operation(date, amount, OperationType.DEPOSIT));
 	}
 
-	public void withdrawal(final int amount) {
+	public void withdrawal(final Date date, final int amount) {
 		assert amount > 0 : WITHDRAWAL_ERROR_MESSAGE;
 
-		this.operations.addOperation(new Operation(amount, OperationType.WITHDRAWAL));
+		this.operations.addOperation(new Operation(date, amount, OperationType.WITHDRAWAL));
 	}
 
 	public AccountStatement getAccountStatement(final Date startDate, final Date endDate) {
@@ -38,9 +38,5 @@ public class Account {
 		final int oldBalance = operations.getBalance(new Date(0), startDate);
 		final int newBalance = operations.getBalance(new Date(0), endDate);
 		return new AccountStatement(startDate, endDate, oldBalance, newBalance, operationList);
-	}
-
-	public void setOperations(Operations operations) {
-		this.operations = operations;
 	}
 }

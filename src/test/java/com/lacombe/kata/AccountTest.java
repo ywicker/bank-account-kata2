@@ -32,9 +32,9 @@ public class AccountTest {
 	@Test
 	public void deposit() {
 		Account account = new Account();
-		account.deposit(2);
+		account.deposit(now, 2);
 		assertThat(account.getBalance()).isEqualTo(2);
-		account.deposit(3);
+		account.deposit(now, 3);
 		assertThat(account.getBalance()).isEqualTo(5);
 	}
 
@@ -44,13 +44,13 @@ public class AccountTest {
 
 		// Test du depot d'un montant a 0
 		assertThatThrownBy(() -> {
-			account.deposit(0);
+			account.deposit(now, 0);
 		}).isInstanceOf(AssertionError.class)
 		  .hasMessageContaining("Le depot doit etre d'un montant superieur a 0");
 
 		// Test du depot d'un montant negatif
 		assertThatThrownBy(() -> {
-			account.deposit(-2);
+			account.deposit(now, -2);
 		}).isInstanceOf(AssertionError.class)
 		  .hasMessageContaining("Le depot doit etre d'un montant superieur a 0");
 	}
@@ -58,9 +58,9 @@ public class AccountTest {
 	@Test
 	public void withdrawal() {
 		Account account = new Account();
-		account.withdrawal(2);
+		account.withdrawal(now, 2);
 		assertThat(account.getBalance()).isEqualTo(-2);
-		account.withdrawal(3);
+		account.withdrawal(now, 3);
 		assertThat(account.getBalance()).isEqualTo(-5);
 	}
 
@@ -70,13 +70,13 @@ public class AccountTest {
 
 		// Test du retrait d'un montant a 0
 		assertThatThrownBy(() -> {
-			account.withdrawal(0);
+			account.withdrawal(now, 0);
 		}).isInstanceOf(AssertionError.class)
 		  .hasMessageContaining("Le retrait doit etre d'un montant superieur a 0");
 
 		// Test du retrait d'un montant negatif
 		assertThatThrownBy(() -> {
-			account.withdrawal(-2);
+			account.withdrawal(now, -2);
 		}).isInstanceOf(AssertionError.class)
 		  .hasMessageContaining("Le retrait doit etre d'un montant superieur a 0");
 	}
@@ -90,7 +90,7 @@ public class AccountTest {
 
 		// Recuperation des operations d'un compte avec une seule operation
 		final Account account2 = new Account();
-		account2.deposit(2);
+		account2.deposit(now, 2);
 		assertThat(account2.getBalance()).isEqualTo(2);
 		assertThat(account2.getOperations()).hasSize(1).extracting("amount", "type")
 			.containsExactly(tuple(2, DEPOSIT));
@@ -99,9 +99,9 @@ public class AccountTest {
 
 		// Recuperation des operations d'un compte avec plusieurs operations
 		final Account account3 = new Account();
-		account3.deposit(10);
-		account3.withdrawal(4);
-		account3.withdrawal(6);
+		account3.deposit(now, 10);
+		account3.withdrawal(now, 4);
+		account3.withdrawal(now, 6);
 		assertThat(account3.getBalance()).isEqualTo(0);
 		assertThat(account3.getOperations()).hasSize(3).extracting("amount", "type")
 			.containsExactly(
@@ -124,12 +124,11 @@ public class AccountTest {
 
 		// Tests d'un compte avec plusieurs transactions
 		final Account account2 = new Account();
-		account2.setOperations( new Operations(Arrays.asList(
-				new Operation(dateFormat.parse("2021-01-20 09:00:00"), 10, DEPOSIT),
-				new Operation(dateFormat.parse("2021-01-20 09:30:00"), 150, WITHDRAWAL),
-				new Operation(dateFormat.parse("2021-10-14 05:00:00"), 150, WITHDRAWAL),
-				new Operation(dateFormat.parse("2022-01-10 09:00:00"), 2000, DEPOSIT),
-				new Operation(dateFormat.parse("2022-01-14 09:00:00"), 20, WITHDRAWAL))));
+		account2.deposit(dateFormat.parse("2021-01-20 09:00:00"), 10);
+		account2.withdrawal(dateFormat.parse("2021-01-20 09:30:00"), 150);
+		account2.withdrawal(dateFormat.parse("2021-10-14 05:00:00"), 150);
+		account2.deposit(dateFormat.parse("2022-01-10 09:00:00"), 2000);
+		account2.withdrawal(dateFormat.parse("2022-01-14 09:00:00"), 20);
 
 		final AccountStatement account2Statement1 = account2.getAccountStatement(
 				dateFormat.parse("2021-01-15 00:00:00"), dateFormat.parse("2022-01-15 00:00:00"));
@@ -162,26 +161,11 @@ public class AccountTest {
 	 */
 	private boolean checkDatesRoughly(final List<?> operationDates, final Date now) {
 		for(Object operationDate : operationDates) {
-			if(!(operationDate instanceof Date)
-					&& !compareDateRoughly((Date)operationDate, now)) {
+			if((operationDate instanceof Date)
+					&& !operationDate.equals(now)) {
 				return false;
 			}
 		}
 		return true;
-	}
-
-	/**
-	 * Permet de verifier qu'une de date soit approximativement 
-	 * egale a la date actuelle (Jour - 1)
-	 * 
-	 * @param operationDate : date de l'operations testee
-	 * @param now : Date de debut de l'execution des TUs
-	 * @return true si la date est approximativement egale a la date 
-	 * actuelle (Jour - 1)
-	 */
-	private boolean compareDateRoughly(final Date operationDate, final Date now) {
-		long timeStampNow = now.getTime();
-		long timeStampOpDate = ((Date)operationDate).getTime();
-		return timeStampNow > timeStampOpDate  && timeStampNow < (timeStampOpDate+86400);
 	}
 }
