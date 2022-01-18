@@ -19,7 +19,7 @@ public class Operations {
 	private List<Operation> operations;
 
 	public List<Operation> getOperations() {
-		return operations;
+		return List.copyOf(operations);
 	}
 
 	/**
