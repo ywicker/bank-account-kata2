@@ -8,12 +8,14 @@ public class Account {
 	private String WITHDRAWAL_ERROR_MESSAGE = "Le retrait doit etre d'un montant superieur a 0";
 
 	private Operations operations;
+	private DateProvider dateProvider;
 
 	public List<Operation> getOperations() {
 		return operations.getOperations();
 	}
 
-	public Account() {
+	public Account(final DateProvider dateProvider) {
+		this.dateProvider = dateProvider;
 		this.operations = new Operations();
 	}
 
@@ -21,16 +23,16 @@ public class Account {
 		return operations.getBalance();
 	}
 
-	public void deposit(final Date date, final int amount) {
+	public void deposit(final int amount) {
 		assert amount > 0 : DEPOSIT_ERROR_MESSAGE;
 
-		this.operations.addOperation(new Operation(date, amount, OperationType.DEPOSIT));
+		this.operations.addOperation(new Operation(this.dateProvider.getDate(), amount, OperationType.DEPOSIT));
 	}
 
-	public void withdrawal(final Date date, final int amount) {
+	public void withdrawal(final int amount) {
 		assert amount > 0 : WITHDRAWAL_ERROR_MESSAGE;
 
-		this.operations.addOperation(new Operation(date, amount, OperationType.WITHDRAWAL));
+		this.operations.addOperation(new Operation(this.dateProvider.getDate(), amount, OperationType.WITHDRAWAL));
 	}
 
 	public AccountStatement getAccountStatement(final Date startDate, final Date endDate) {
