@@ -2,7 +2,11 @@ package com.lacombe.kata.model;
 
 public enum OperationType {
 	DEPOSIT("Depot"),
-	WITHDRAWAL("Retrait");
+	WITHDRAWAL("Retrait") {
+		public int amountToApply(final int amount) {
+			return - amount;
+		}
+	};
 
 	public String getLabel() {
 		return label;
@@ -15,14 +19,6 @@ public enum OperationType {
 	}
 
 	public int amountToApply(final int amount) {
-		switch (this) {
-		case DEPOSIT:
-			return amount;
-		case WITHDRAWAL:
-			return -amount;
-		default:
-			break;
-		}
-		return 0;
+		return amount;
 	}
 }
