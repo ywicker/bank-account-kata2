@@ -4,9 +4,6 @@ import java.util.Date;
 import java.util.List;
 
 public class Account {
-	private String DEPOSIT_ERROR_MESSAGE = "Le depot doit etre d'un montant superieur a 0";
-	private String WITHDRAWAL_ERROR_MESSAGE = "Le retrait doit etre d'un montant superieur a 0";
-
 	private Operations operations;
 	private DateProvider dateProvider;
 
@@ -23,15 +20,11 @@ public class Account {
 		return operations.getBalance();
 	}
 
-	public void deposit(final int amount) {
-		assert amount > 0 : DEPOSIT_ERROR_MESSAGE;
-
+	public void deposit(final Amount amount) {
 		this.operations.addOperation(new Operation(this.dateProvider.getDate(), amount, OperationType.DEPOSIT));
 	}
 
-	public void withdrawal(final int amount) {
-		assert amount > 0 : WITHDRAWAL_ERROR_MESSAGE;
-
+	public void withdrawal(final Amount amount) {
 		this.operations.addOperation(new Operation(this.dateProvider.getDate(), amount, OperationType.WITHDRAWAL));
 	}
 

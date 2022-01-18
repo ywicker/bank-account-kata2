@@ -16,6 +16,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 import static com.lacombe.kata.model.OperationType.DEPOSIT;
 import static com.lacombe.kata.model.OperationType.WITHDRAWAL;
+import static com.lacombe.kata.model.Amount.createAmount;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -39,9 +40,9 @@ public class AccountTest {
 	@Test
 	public void deposit() {
 		Account account = new Account(dateProvider);
-		account.deposit(2);
+		account.deposit(createAmount(2));
 		assertThat(account.getBalance()).isEqualTo(2);
-		account.deposit(3);
+		account.deposit(createAmount(3));
 		assertThat(account.getBalance()).isEqualTo(5);
 	}
 
@@ -51,23 +52,21 @@ public class AccountTest {
 
 		// Test du depot d'un montant a 0
 		assertThatThrownBy(() -> {
-			account.deposit(0);
-		}).isInstanceOf(AssertionError.class)
-		  .hasMessageContaining("Le depot doit etre d'un montant superieur a 0");
+			account.deposit(createAmount(0));
+		}).isInstanceOf(AssertionError.class);
 
 		// Test du depot d'un montant negatif
 		assertThatThrownBy(() -> {
-			account.deposit(-2);
-		}).isInstanceOf(AssertionError.class)
-		  .hasMessageContaining("Le depot doit etre d'un montant superieur a 0");
+			account.deposit(createAmount(-2));
+		}).isInstanceOf(AssertionError.class);
 	}
 
 	@Test
 	public void withdrawal() {
 		Account account = new Account(dateProvider);
-		account.withdrawal(2);
+		account.withdrawal(createAmount(2));
 		assertThat(account.getBalance()).isEqualTo(-2);
-		account.withdrawal(3);
+		account.withdrawal(createAmount(3));
 		assertThat(account.getBalance()).isEqualTo(-5);
 	}
 
@@ -77,15 +76,13 @@ public class AccountTest {
 
 		// Test du retrait d'un montant a 0
 		assertThatThrownBy(() -> {
-			account.withdrawal(0);
-		}).isInstanceOf(AssertionError.class)
-		  .hasMessageContaining("Le retrait doit etre d'un montant superieur a 0");
+			account.withdrawal(createAmount(0));
+		}).isInstanceOf(AssertionError.class);
 
 		// Test du retrait d'un montant negatif
 		assertThatThrownBy(() -> {
-			account.withdrawal(-2);
-		}).isInstanceOf(AssertionError.class)
-		  .hasMessageContaining("Le retrait doit etre d'un montant superieur a 0");
+			account.withdrawal(createAmount(-2));
+		}).isInstanceOf(AssertionError.class);
 	}
 
 	@Test
@@ -99,22 +96,22 @@ public class AccountTest {
 
 		// Recuperation des operations d'un compte avec une seule operation
 		final Account account2 = new Account(dateProviderMock);
-		account2.deposit(2);
+		account2.deposit(createAmount(2));
 		assertThat(account2.getBalance()).isEqualTo(2);
 		assertThat(account2.getOperations()).hasSize(1).containsExactly(
-				new Operation(expectedDate, 2, DEPOSIT));
+				new Operation(expectedDate, createAmount(2), DEPOSIT));
 
 		// Recuperation des operations d'un compte avec plusieurs operations
 		final Account account3 = new Account(dateProviderMock);
-		account3.deposit(10);
-		account3.withdrawal(4);
-		account3.withdrawal(6);
+		account3.deposit(createAmount(10));
+		account3.withdrawal(createAmount(4));
+		account3.withdrawal(createAmount(6));
 		assertThat(account3.getBalance()).isEqualTo(0);
 		assertThat(account3.getOperations()).hasSize(3);
 		assertThat(account3.getOperations()).containsExactly(
-				new Operation(expectedDate, 10, DEPOSIT),
-				new Operation(expectedDate, 4, WITHDRAWAL),
-				new Operation(expectedDate, 6, WITHDRAWAL));
+				new Operation(expectedDate, createAmount(10), DEPOSIT),
+				new Operation(expectedDate, createAmount(4), WITHDRAWAL),
+				new Operation(expectedDate, createAmount(6), WITHDRAWAL));
 	}
 
 	@Test
@@ -134,11 +131,11 @@ public class AccountTest {
 				dateFormat.parse("2022-01-10 09:00:00"),
 				dateFormat.parse("2022-01-14 09:00:00"));
 		final Account account2 = new Account(dateProviderMock);
-		account2.deposit(10);
-		account2.withdrawal(150);
-		account2.withdrawal(150);
-		account2.deposit(2000);
-		account2.withdrawal(20);
+		account2.deposit(createAmount(10));
+		account2.withdrawal(createAmount(150));
+		account2.withdrawal(createAmount(150));
+		account2.deposit(createAmount(2000));
+		account2.withdrawal(createAmount(20));
 
 		final AccountStatement account2Statement1 = account2.getAccountStatement(
 				dateFormat.parse("2021-01-15 00:00:00"), dateFormat.parse("2022-01-15 00:00:00"));

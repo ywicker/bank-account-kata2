@@ -7,7 +7,7 @@ public class Operation {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + amount;
+		result = prime * result + ((amount == null) ? 0 : amount.hashCode());
 		result = prime * result + ((date == null) ? 0 : date.hashCode());
 		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
@@ -21,7 +21,10 @@ public class Operation {
 		if (getClass() != obj.getClass())
 			return false;
 		Operation other = (Operation) obj;
-		if (amount != other.amount)
+		if (amount == null) {
+			if (other.amount != null)
+				return false;
+		} else if (!amount.equals(other.amount))
 			return false;
 		if (date == null) {
 			if (other.date != null)
@@ -32,7 +35,7 @@ public class Operation {
 			return false;
 		return true;
 	}
-	public Operation(final Date date, final int amount, final OperationType type) {
+	public Operation(final Date date, final Amount amount, final OperationType type) {
 		this.date = date;
 		this.amount = amount;
 		this.type = type;
@@ -40,13 +43,13 @@ public class Operation {
 	public Date getDate() {
 		return date;
 	}
-	public int getAmount() {
+	public Amount getAmount() {
 		return amount;
 	}
 	public OperationType getType() {
 		return type;
 	}
 	private Date date;
-	private int amount;
+	private Amount amount;
 	private OperationType type;
 }
