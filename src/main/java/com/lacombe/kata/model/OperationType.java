@@ -1,18 +1,22 @@
 package com.lacombe.kata.model;
 
 public enum OperationType {
-	DEPOSIT("Depot"),
+	DEPOSIT("Depot"){
+		public int amountToApply(final Amount amount) {
+			return amount.getValue();
+		}
+	},
 	WITHDRAWAL("Retrait") {
 		public int amountToApply(final Amount amount) {
 			return -amount.getValue();
 		}
 	};
 
+	private final String label;
+
 	public String getLabel() {
 		return label;
 	}
-
-	private final String label;
 
 	private OperationType(String label) {
 		this.label = label;

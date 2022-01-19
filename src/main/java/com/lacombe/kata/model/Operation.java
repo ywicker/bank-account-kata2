@@ -3,6 +3,25 @@ package com.lacombe.kata.model;
 import java.util.Date;
 
 public class Operation {
+	private Date date;
+	private Amount amount;
+	private OperationType type;
+
+	public Operation(final Date date, final Amount amount, final OperationType type) {
+		this.date = date;
+		this.amount = amount;
+		this.type = type;
+	}
+	public Date getDate() {
+		return date;
+	}
+	public Amount getAmount() {
+		return amount;
+	}
+	public OperationType getType() {
+		return type;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -35,21 +54,4 @@ public class Operation {
 			return false;
 		return true;
 	}
-	public Operation(final Date date, final Amount amount, final OperationType type) {
-		this.date = date;
-		this.amount = amount;
-		this.type = type;
-	}
-	public Date getDate() {
-		return date;
-	}
-	public Amount getAmount() {
-		return amount;
-	}
-	public OperationType getType() {
-		return type;
-	}
-	private Date date;
-	private Amount amount;
-	private OperationType type;
 }

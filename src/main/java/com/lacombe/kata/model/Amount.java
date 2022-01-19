@@ -1,6 +1,22 @@
 package com.lacombe.kata.model;
 
 public class Amount {
+	private int value;
+
+	public int getValue() {
+		return value;
+	}
+
+	private Amount(int value) {
+		super();
+		this.value = value;
+	}
+
+	public static Amount createAmount(final int value) {
+		assert Integer.signum(value) == 1;
+		return new Amount(value);
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -21,21 +37,5 @@ public class Amount {
 		if (value != other.value)
 			return false;
 		return true;
-	}
-
-	public int getValue() {
-		return value;
-	}
-
-	private Amount(int value) {
-		super();
-		this.value = value;
-	}
-
-	private int value;
-
-	public static Amount createAmount(final int value) {
-		assert Integer.signum(value) == 1;
-		return new Amount(value);
 	}
 }

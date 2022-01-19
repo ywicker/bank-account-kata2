@@ -6,14 +6,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Operations {
+	private List<Operation> operations;
+
 	public Operations() {
 		this.operations = new ArrayList<>();
 	}
 	public Operations(List<Operation> operations) {
 		this.operations = operations;
 	}
-
-	private List<Operation> operations;
 
 	public List<Operation> getOperations() {
 		return List.copyOf(operations);
