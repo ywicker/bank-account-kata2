@@ -28,10 +28,7 @@ public class Account {
 		this.operations.addOperation(new Operation(this.dateProvider.getDate(), amount, OperationType.WITHDRAWAL));
 	}
 
-	public AccountStatement getAccountStatement(final Date startDate, final Date endDate) {
-		final List<Operation> operationList = operations.getOperations(startDate, endDate);
-		final int oldBalance = operations.getBalance(new Date(0), startDate);
-		final int newBalance = operations.getBalance(new Date(0), endDate);
-		return new AccountStatement(startDate, endDate, oldBalance, newBalance, operationList);
+	public List<Operation> getAccountStatement(final Date startDate, final Date endDate) {
+		return operations.getOperations(startDate, endDate);
 	}
 }

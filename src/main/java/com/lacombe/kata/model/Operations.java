@@ -1,8 +1,6 @@
 package com.lacombe.kata.model;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Operations {
@@ -10,9 +8,6 @@ public class Operations {
 
 	public Operations() {
 		this.operations = new ArrayList<>();
-	}
-	public Operations(List<Operation> operations) {
-		this.operations = operations;
 	}
 
 	public List<Operation> getOperations() {

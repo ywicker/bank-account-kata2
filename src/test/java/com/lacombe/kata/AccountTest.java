@@ -6,7 +6,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import com.lacombe.kata.model.Account;
-import com.lacombe.kata.model.AccountStatement;
 import com.lacombe.kata.model.DateProvider;
 import com.lacombe.kata.model.DateProviderDefault;
 import com.lacombe.kata.model.Operation;
@@ -27,7 +26,7 @@ public class AccountTest {
 	@Mock
 	private DateProvider dateProviderMock;
 
-	private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	private Date expectedDate;
 
 	@Before
@@ -118,11 +117,10 @@ public class AccountTest {
 	public void getAccountStatement() throws ParseException {
 		// Test d'un compte vide
 		final Account account1 = new Account(dateProvider);
-		final AccountStatement account1Statement1 = account1.getAccountStatement(
-				dateFormat.parse("2022-01-14 00:00:00"), dateFormat.parse("2022-01-15 00:00:00"));
-		assertThat(account1Statement1.getOldBalance()).isEqualTo(0);
-		assertThat(account1Statement1.getNewBalance()).isEqualTo(0);
-		assertThat(account1Statement1.getOperations()).isEmpty();
+		assertThat(account1.getAccountStatement(
+				dateFormat.parse("2022-01-14 00:00:00"), 
+				dateFormat.parse("2022-01-15 00:00:00")))
+			.isEmpty();
 
 		// Tests d'un compte avec plusieurs transactions
 		when(dateProviderMock.getDate()).thenReturn(dateFormat.parse("2021-01-20 09:00:00"),
@@ -137,23 +135,19 @@ public class AccountTest {
 		account2.deposit(createAmount(2000));
 		account2.withdrawal(createAmount(20));
 
-		final AccountStatement account2Statement1 = account2.getAccountStatement(
-				dateFormat.parse("2021-01-15 00:00:00"), dateFormat.parse("2022-01-15 00:00:00"));
-		assertThat(account2Statement1.getOldBalance()).isEqualTo(0);
-		assertThat(account2Statement1.getNewBalance())
-			.isEqualTo(account2.getBalance()).isEqualTo(1690);
-		assertThat(account2Statement1.getOperations()).hasSize(5);
+		assertThat(account2.getAccountStatement(
+				dateFormat.parse("2021-01-15 00:00:00"), 
+				dateFormat.parse("2022-01-15 00:00:00")))
+			.hasSize(5);
 
-		final AccountStatement account2Statement2 = account2.getAccountStatement(
-				dateFormat.parse("2021-01-10 00:00:00"), dateFormat.parse("2021-01-12 00:00:00"));
-		assertThat(account2Statement2.getOldBalance()).isEqualTo(0);
-		assertThat(account2Statement2.getNewBalance()).isEqualTo(0);
-		assertThat(account2Statement2.getOperations()).isEmpty();
+		assertThat(account2.getAccountStatement(
+				dateFormat.parse("2021-01-10 00:00:00"), 
+				dateFormat.parse("2021-01-12 00:00:00")))
+			.isEmpty();
 
-		final AccountStatement account2Statement3 = account2.getAccountStatement(
-				dateFormat.parse("2021-09-10 00:00:00"), dateFormat.parse("2022-01-14 00:00:00"));
-		assertThat(account2Statement3.getOldBalance()).isEqualTo(-140);
-		assertThat(account2Statement3.getNewBalance()).isEqualTo(1710);
-		assertThat(account2Statement3.getOperations()).hasSize(2);
+		assertThat(account2.getAccountStatement(
+				dateFormat.parse("2021-09-10 00:00:00"), 
+				dateFormat.parse("2022-01-14 00:00:00")))
+			.hasSize(2);
 	}
 }
