@@ -39,8 +39,10 @@ public class AccountTest {
 	@Test
 	public void deposit() {
 		Account account = new Account(dateProvider);
+
 		account.deposit(createAmount(2));
 		assertThat(account.getBalance()).isEqualTo(2);
+
 		account.deposit(createAmount(3));
 		assertThat(account.getBalance()).isEqualTo(5);
 	}
